@@ -1,12 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/exception.dart';
-import 'package:ditonton/common/failure.dart';
-import 'package:ditonton/data/models/watchlist_model.dart';
+import 'package:core/core.dart';
+import 'package:core/data/models/watchlist_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:ditonton/data/repositories/watchlist_repository_impl.dart';
+import 'package:core/data/repositories/watchlist_repository_impl.dart';
 
 import '../../helpers/test_helper.mocks.dart';
 

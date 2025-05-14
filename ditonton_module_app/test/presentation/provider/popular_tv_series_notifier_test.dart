@@ -1,10 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:ditonton/common/failure.dart';
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/domain/entities/tv_serie.dart';
+import 'package:core/core.dart';
+import 'package:core/domain/entities/tv_serie.dart';
 
-import 'package:ditonton/domain/usecases/get_popular_tv_series.dart';
-import 'package:ditonton/presentation/provider/popular_tv_series_notifier.dart';
+import 'package:core/domain/usecases/get_popular_tv_series.dart';
+import 'package:core/presentation/provider/popular_tv_series_notifier.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

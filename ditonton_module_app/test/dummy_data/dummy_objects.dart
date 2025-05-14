@@ -1,9 +1,9 @@
-import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/data/models/watchlist_model.dart';
-import 'package:ditonton/domain/entities/movie.dart';
-import 'package:ditonton/domain/entities/movie_detail.dart';
-import 'package:ditonton/domain/entities/tv_serie_detail.dart';
-import 'package:ditonton/domain/entities/watchlist.dart';
+import 'package:core/core.dart';
+import 'package:core/data/models/watchlist_model.dart';
+import 'package:core/domain/entities/movie.dart';
+import 'package:core/domain/entities/movie_detail.dart';
+import 'package:core/domain/entities/tv_serie_detail.dart';
+import 'package:core/domain/entities/watchlist.dart';
 
 final testMovie = Movie(
   adult: false,
