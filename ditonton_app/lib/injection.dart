@@ -22,6 +22,8 @@ import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 
+import 'common/network_info.dart';
+
 final locator = GetIt.instance;
 
 void init() {
@@ -80,6 +82,7 @@ void init() {
     () => MovieRepositoryImpl(
       remoteDataSource: locator(),
       localDataSource: locator(),
+      networkInfo: locator(),
     ),
   );
 
@@ -94,4 +97,7 @@ void init() {
 
   // external
   locator.registerLazySingleton(() => http.Client());
+  locator.registerLazySingleton(
+    () => NetworkInfo,
+  );
 }
