@@ -1,5 +1,7 @@
 import 'package:counter_bloc/bloc/counter_bloc.dart';
+import 'package:counter_bloc/counter_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +17,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: BlocProvider<CounterCubit>(
+        create: (_) => CounterCubit(),
+        child: MyHomePage(title: 'Flutter Demo Home Page'),
+      ),
     );
   }
 }
@@ -30,14 +35,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final counterBloc = CounterBloc();
-
-  @override
-  void dispose() {
-    counterBloc.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,16 +43,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
         title: Text(widget.title),
       ),
-      body: StreamBuilder(
-        stream: counterBloc.counterStream,
-        builder: (context, snapshot) {
+      body: BlocBuilder<CounterCubit, CounterState>(
+        builder: (context, state) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const Text('You have pushed the button this many times:'),
                 Text(
-                  '${snapshot.data}',
+                  '${state.value}',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ],
@@ -63,23 +59,29 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
-      floatingActionButton: Row(
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              counterBloc.eventSink.add(CounterEvent.Decrement);
-            },
-            tooltip: 'Decrement',
-            child: const Icon(Icons.remove),
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              counterBloc.eventSink.add(CounterEvent.Increment);
-            },
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
-          ),
-        ],
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          // mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                // counterBloc.eventSink.add(CounterEvent.Decrement);
+                context.read<CounterCubit>().decrement();
+              },
+              tooltip: 'Decrement',
+              child: const Icon(Icons.remove),
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                context.read<CounterCubit>().increment();
+              },
+              tooltip: 'Increment',
+              child: const Icon(Icons.add),
+            ),
+          ],
+        ),
       ),
     );
   }
