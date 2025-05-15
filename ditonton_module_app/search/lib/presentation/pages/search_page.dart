@@ -1,9 +1,10 @@
+// ignore_for_file: constant_identifier_names
 import 'package:core/core.dart';
 import 'package:core/presentation/widgets/movie_card_list.dart';
 import 'package:core/presentation/widgets/tv_serie_card_list.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:search/presentation/provider/search_notifier.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:search/presentation/bloc/search_bloc.dart';
 
 class SearchPage extends StatelessWidget {
   static const ROUTE_NAME = '/search';
@@ -26,16 +27,12 @@ class SearchPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              onSubmitted: (query) {
+              onChanged: (query) {
                 category == Category.movie
-                    ? Provider.of<SearchNotifier>(
-                      context,
-                      listen: false,
-                    ).fetchMovieSearch(query)
-                    : Provider.of<SearchNotifier>(
-                      context,
-                      listen: false,
-                    ).fetchTvSearch(query);
+                    ? context.read<SearchBloc>().add(OnQueryMovieChanged(query))
+                    : context.read<SearchBloc>().add(
+                      OnQueryTvSerieChanged(query),
+                    );
               },
               decoration: InputDecoration(
                 hintText: 'Search title',
@@ -46,35 +43,70 @@ class SearchPage extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Text('Search Result', style: kHeading6),
-            Consumer<SearchNotifier>(
-              builder: (context, data, child) {
-                if (data.state == RequestState.Loading) {
+            BlocBuilder<SearchBloc, SearchState>(
+              builder: (context, state) {
+                if (state is SearchLoading) {
                   return Center(child: CircularProgressIndicator());
-                } else if (data.state == RequestState.Loaded) {
-                  final result =
-                      category == Category.movie
-                          ? data.moviesResult
-                          : data.tvSeriesResult;
+                } else if (state is SearchMoviesHasData &&
+                    category == Category.movie) {
+                  final result = state.result;
                   return Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(8),
                       itemBuilder: (context, index) {
-                        if (category == Category.movie) {
-                          final movie = data.moviesResult[index];
-                          return MovieCard(movie);
-                        } else {
-                          final tvSerie = data.tvSeriesResult[index];
-                          return TvSerieCard(tvSerie);
-                        }
+                        final movie = state.result[index];
+                        return MovieCard(movie);
                       },
                       itemCount: result.length,
                     ),
                   );
+                } else if (state is SearchTvSeriesHasData &&
+                    category == Category.tvSerie) {
+                  final result = state.result;
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemBuilder: (context, index) {
+                        final tvSerie = state.result[index];
+                        return TvSerieCard(tvSerie);
+                      },
+                      itemCount: result.length,
+                    ),
+                  );
+                } else if (state is SearchError) {
+                  return Expanded(child: Center(child: Text(state.message)));
                 } else {
                   return Expanded(child: Container());
                 }
               },
             ),
+            // Consumer<SearchNotifier>(
+            //   builder: (context, data, child) {
+            //     if (data.state == RequestState.Loading) {
+            //       return Center(child: CircularProgressIndicator());
+            //     } else if (data.state == RequestState.Loaded) {
+            //       final result =
+            //           category == Category.movie
+            //               ? data.moviesResult
+            //               : data.tvSeriesResult;
+            //       return Expanded(
+            //         child: ListView.builder(
+            //           padding: const EdgeInsets.all(8),
+            //           itemBuilder: (context, index) {
+            //             if (category == Category.movie) {
+            //               final movie = data.moviesResult[index];
+            //               return MovieCard(movie);
+            //             } else {
+            //               final tvSerie = data.tvSeriesResult[index];
+            //               return TvSerieCard(tvSerie);
+            //             }
+            //           },
+            //           itemCount: result.length,
+            //         ),
+            //       );
+            //     }
+            //   },
+            // ),
           ],
         ),
       ),

@@ -1,5 +1,7 @@
 import 'package:about/about.dart';
 import 'package:core/core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:search/search.dart';
 import 'package:core/utils/utils.dart';
 import 'package:core/presentation/pages/movie_detail_page.dart';
@@ -44,9 +46,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<TvSerieDetailNotifier>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<SearchNotifier>(),
-        ),
+        BlocProvider(create: (context) => di.locator<SearchBloc>()),
         ChangeNotifierProvider(
           create: (_) => di.locator<TopRatedMoviesNotifier>(),
         ),

@@ -32,6 +32,7 @@ import 'package:core/presentation/provider/tv_serie_detail_notifier.dart';
 import 'package:core/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
+
 import 'package:search/search.dart';
 
 final locator = GetIt.instance;
@@ -57,12 +58,7 @@ void init() {
       removeWatchlist: locator(),
     ),
   );
-  locator.registerFactory(
-    () => SearchNotifier(
-      searchMovies: locator(),
-      searchTvSeries: locator(),
-    ),
-  );
+  locator.registerFactory(() => SearchBloc(locator(), locator()));
   locator.registerFactory(
     () => PopularMoviesNotifier(
       locator(),
